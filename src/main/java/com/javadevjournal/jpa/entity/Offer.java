@@ -1,5 +1,6 @@
 package com.javadevjournal.jpa.entity;
 
+import com.javadevjournal.jpa.enums.StatusName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -23,13 +25,20 @@ public class Offer {
 	@Column(name = "offer_id")
 	private Long id;
 
+	@Column(name = "creationDate")
+	private LocalDate creationDate;
+
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
 	private Customer customer;
 
-	@Column(name = "offered_price")
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Ad ad;
+
+	@Column(name = "price")
 	private Long price;
 
-	@Column(name = "cancelled")
-	private boolean cancelled;
+	@Column(name = "status")
+	private StatusName status;
 }

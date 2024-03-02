@@ -6,38 +6,70 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.9</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/><!-- lookup parent from repository -->
     </parent>
     <groupId>com.devjournal</groupId>
     <artifactId>blse</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1</version>
+    <packaging>war</packaging>
     <name>blse</name>
     <description>blse</description>
     <properties>
         <java.version>16</java.version>
+        <jsonwebtoken.version>0.8.0</jsonwebtoken.version>
         <maven.compiler.source>16</maven.compiler.source>
         <maven.compiler.target>16</maven.compiler.target>
         <hibernate-core.version>5.6.15.Final</hibernate-core.version>
+        <deploy.wildfly.host>127.0.0.1</deploy.wildfly.host>
+        <deploy.wildfly.port>9990</deploy.wildfly.port>
+        <deploy.wildfly.username>dasha</deploy.wildfly.username>
+        <deploy.wildfly.password>dasha</deploy.wildfly.password>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jms</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>5.3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jsonwebtoken.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -93,6 +125,28 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>3.0.2.Final</version>
+
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <filename>${project.build.finalName}.war</filename>
+                    <hostname>${deploy.wildfly.host}</hostname>
+                    <port>${deploy.wildfly.port}</port>
+                    <username>${deploy.wildfly.username}</username>
+                    <password>${deploy.wildfly.password}</password>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

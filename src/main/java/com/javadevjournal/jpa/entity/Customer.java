@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -28,15 +26,46 @@ public class Customer {
     @Column(name = "password")
     private String password;
 
-    @ToString.Exclude
+    /*@ToString.Exclude
     @Column(name = "token")
-    private String token;
+    private String token;*/
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Role role;
+    /*@Column(name = "role_id")
+    private Long role;*/
 
     @Column(name = "karma_negative")
     private int karmaNegative = 0;
 
     @Column(name = "banned")
     private boolean banned = false;
+
+    /*@ManyToMany (cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "customer_ad",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "ad_id")
+    )
+    private List<Ad> ads=new ArrayList<>();*/
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavAdRow> favAds;
+
+
+
+    /*public void addAd(Ad ad){
+        this.favAds.add(ad);
+    }
+    public void removeAd(Ad ad){
+        this.ads.remove(ad);
+    }
+
+    /*public List<Ad> getAds(){
+        return this.ads;
+    }*/
 
     public void incNegative() {
         karmaNegative++;

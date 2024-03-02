@@ -1,8 +1,10 @@
 package com.javadevjournal.service;
 
-import com.javadevjournal.dto.CustomerDTO;
+import com.javadevjournal.dto.FullCustomerDTO;
+import com.javadevjournal.dto.MessageDTO;
+import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
-import org.springframework.security.core.userdetails.User;
+import com.javadevjournal.jpa.entity.FavAdRow;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -10,22 +12,26 @@ import java.util.Optional;
 
 public interface CustomerService {
 
-	//String login(String username, String password);
-	String login(CustomerDTO customerDTO);
 
 	List<Customer> findAll();
 
-	Optional<User> findByToken(String token);
+	String findByToken(String token);
 
 	Customer findById(Long id);
 
-	Customer registration(CustomerDTO customerDTO);
-
 	Optional<Customer> whoIs(HttpServletRequest httpServletRequest);
+	Optional<Customer> whoIsAdmin(HttpServletRequest httpServletRequest);
 
 	void deleteMe(HttpServletRequest httpServletRequest);
 
+	MessageDTO addToFav(HttpServletRequest httpServletRequest, Long id);
+	MessageDTO delFromFav(HttpServletRequest httpServletRequest, Long id);
+
+	List<Ad> showFav(HttpServletRequest httpServletRequest);
+
 	String complaint(HttpServletRequest httpServletRequest, Long customerId);
+
+	FullCustomerDTO customerInfo(Customer customer);
 
 	void save(Customer customer);
 }

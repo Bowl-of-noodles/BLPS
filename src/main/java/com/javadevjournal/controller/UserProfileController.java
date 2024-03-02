@@ -1,22 +1,19 @@
 package com.javadevjournal.controller;
 
-import com.javadevjournal.dto.AdDTO;
-import com.javadevjournal.dto.CustomerDTO;
-import com.javadevjournal.dto.RankDTO;
+import com.javadevjournal.dto.*;
+import com.javadevjournal.exceptions.EmptyEnterException;
+import com.javadevjournal.exceptions.NoAuthorityException;
+import com.javadevjournal.exceptions.NotFoundException;
+import com.javadevjournal.exceptions.WrongInputException;
 import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
+import com.javadevjournal.jpa.enums.RoleName;
 import com.javadevjournal.security.MyResourceNotFoundException;
 import com.javadevjournal.service.AdsService;
 import com.javadevjournal.service.CustomerService;
+import com.javadevjournal.service.OfferService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -28,10 +25,13 @@ public class UserProfileController {
 
     private final CustomerService customerService;
     private final AdsService adsService;
+    private final OfferService offerService;
 
     @GetMapping(value = "/users/user/{id}", produces = "application/json")
-    public Customer getUserDetail(@PathVariable Long id) {
-        return customerService.findById(id);
+    public FullCustomerDTO getUserDetail(@PathVariable Long id) {
+        Customer customer = customerService.findById(id);
+        FullCustomerDTO customerInfo = customerService.customerInfo(customer);
+        return customerInfo;
     }
 
     @GetMapping(value = "/ads/ad/{id}", produces = "application/json")
@@ -53,21 +53,17 @@ public class UserProfileController {
     }
 
     @GetMapping(value = "/users/complaint/{id}")
-    public String complaint(HttpServletRequest httpServletRequest,
-                            @PathVariable Long id) {
+    public String complaint(HttpServletRequest httpServletRequest, @PathVariable Long id) {
         return customerService.complaint(httpServletRequest, id);
     }
 
     @GetMapping(value = "/ads/filter", produces = "application/json")
-    public List<Ad> findApartments(@RequestParam("minPrice") final Long minPrice,
-                                   @RequestParam("maxPrice") final Long maxPrice,
-                                   @RequestParam("weight") final Double weight,
-                                   @RequestParam("category") final String category) {
+    public List<Ad> findAds(@RequestParam("minPrice") final Long minPrice, @RequestParam("maxPrice") final Long maxPrice, @RequestParam("weight") final Double weight, @RequestParam("category") final String category) {
         return adsService.findAdsByFilter(minPrice, maxPrice, weight, category);
     }
 
     @GetMapping(value = "/ads/my", produces = "application/json")
-    public List<Ad> findMyApartments(HttpServletRequest httpServletRequest) {
+    public List<Ad> findMyAds(HttpServletRequest httpServletRequest) {
         var customerOpt = customerService.whoIs(httpServletRequest);
         if (customerOpt.isEmpty()) {
             throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
@@ -82,8 +78,7 @@ public class UserProfileController {
 
 
     @PostMapping(value = "/ads/create", produces = "application/json")
-    public Ad createApartment(HttpServletRequest httpServletRequest,
-                              @RequestBody AdDTO adDTO) {
+    public Ad createAd(HttpServletRequest httpServletRequest, @RequestBody AdDTO adDTO) {
         var customerOpt = customerService.whoIs(httpServletRequest);
         System.out.println(customerOpt);
         Long id = customerOpt.get().getId();
@@ -100,10 +95,114 @@ public class UserProfileController {
     @GetMapping(value = "/ads/ad/{id}/rank", produces = "application/json")
     //public String rankAd(@PathVariable Long id,
     //                     @RequestParam("rank") final Double rank) {
-    public String getToken(@PathVariable Long id, @RequestBody RankDTO rankDTO) {
-        adsService.rank(id, rankDTO);
-        String status = "Объявление оценено";
-        String jsonString = "{\"Статус\": \"" + status + "\"}";
-        return jsonString;
+    public MessageDTO rankAd(@PathVariable Long id, @RequestBody RankDTO rankDTO) {
+        MessageDTO messageDTO = adsService.rank(id, rankDTO);
+        return messageDTO;
     }
+
+    @GetMapping(value = "/ads/ad/{id}/fav/add", produces = "application/json")
+    public MessageDTO addFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        MessageDTO message = customerService.addToFav(httpServletRequest, id);
+        return message;
+    }
+
+    @DeleteMapping (value = "/ads/ad/{id}/fav/del", produces = "application/json")
+    public MessageDTO delFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        MessageDTO message = customerService.delFromFav(httpServletRequest, id);
+        return message;
+    }
+
+    @GetMapping (value = "/ads/ad/fav/my", produces = "application/json")
+    public List<Ad> showMyFav(HttpServletRequest httpServletRequest) {
+        return customerService.showFav(httpServletRequest);
+    }
+
+
+    @PostMapping(value = "/offers/create", produces = "application/json")
+    public OfferDTO createOffer(HttpServletRequest httpServletRequest, @RequestBody IdDTO idDTO) {
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+        var customer = customerOpt.get();
+        if (customer.isBanned()) {
+            throw new MyResourceNotFoundException("Вы забанены, вам нельзя выставлять квартиры на продажу");
+        }
+        return offerService.createOffer(customer, idDTO.getId());
+    }
+
+    @GetMapping (value = "/offers/my", produces = "application/json")
+    public List<OfferDTO> allMyOffers(HttpServletRequest httpServletRequest) {
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+        var customer = customerOpt.get();
+        return offerService.findAllByCustomer(customer);
+    }
+
+    @PutMapping (value = "/offers/admin/offer/{id}/status/change", produces = "application/json")
+    public MessageDTO changeOfferStatus(HttpServletRequest httpServletRequest, @PathVariable Long id, @RequestBody StatusDTO statusDTO) throws NoAuthorityException {
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+        var customer = customerOpt.get();
+        return offerService.changeOfferStatus(id, statusDTO);
+    }
+
+    @GetMapping (value = "/offers/offer/{id}", produces = "application/json")
+    public OfferDTO getOffer(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+
+        return offerService.getOffer(id);
+    }
+
+    @GetMapping (value = "/offers/admin/status", produces = "application/json")
+    public List<OfferDTO> getOffersByStatus(HttpServletRequest httpServletRequest, @RequestBody StatusDTO statusDTO)throws NoAuthorityException {
+        var customerOpt = customerService.whoIsAdmin(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+        var customer = customerOpt.get();
+        return offerService.findAllByStatus(statusDTO);
+    }
+
+
+
+
+    @ExceptionHandler(NotFoundException.class)
+    public ExceptionDTO handleNotFoundException(NotFoundException e) {
+        return new ExceptionDTO(404, e.getMessage());
+    }
+
+    @ExceptionHandler(WrongInputException.class)
+    public ExceptionDTO handleWrongInputException(WrongInputException e) {
+        return new ExceptionDTO(400, e.getMessage());
+    }
+
+    @ExceptionHandler(EmptyEnterException.class)
+    public ExceptionDTO handleEmptyInputException(EmptyEnterException e) {
+        return new ExceptionDTO(400, e.getMessage());
+    }
+
+    @ExceptionHandler(NoAuthorityException.class)
+    public ExceptionDTO handleNoAthorityException(NoAuthorityException e) {
+        return new ExceptionDTO(403, "У вас нет нужных прав для этой команды");
+    }
+
+
 }

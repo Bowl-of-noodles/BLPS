@@ -1,6 +1,7 @@
 package com.javadevjournal.service;
 
 import com.javadevjournal.dto.AdDTO;
+import com.javadevjournal.dto.MessageDTO;
 import com.javadevjournal.dto.RankDTO;
 import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
@@ -20,7 +21,7 @@ public interface AdsService {
 
 	void save(Ad ad);
 
-	String rank(Long id, RankDTO rankDTO);
+	MessageDTO rank(Long id, RankDTO rankDTO);
 
 	Ad getById(Long id);
 

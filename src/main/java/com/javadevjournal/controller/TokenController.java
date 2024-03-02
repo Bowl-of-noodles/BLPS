@@ -19,7 +19,7 @@ public class TokenController {
 
     private final CustomerService customerService;
 
-    @PostMapping("/token")
+    /*@PostMapping("/token")
     //public String getToken(@RequestParam("username") final String username, @RequestParam("password") final String password) {
     public String getToken(@RequestBody CustomerDTO customerDTO) {
         String token = customerService.login(customerDTO);
@@ -34,7 +34,7 @@ public class TokenController {
     @PostMapping(value = "/registration")
     public Customer createNewUser(@RequestBody CustomerDTO customerDTO) {
         return customerService.registration(customerDTO);
-    }
+    }*/
 
     @GetMapping(value = "/all", produces = "application/json")
     public List<Customer> getAllUsers() {
