@@ -5,16 +5,16 @@ import com.javadevjournal.dto.OfferDTO;
 import com.javadevjournal.dto.StatusDTO;
 import com.javadevjournal.jpa.entity.Customer;
 import com.javadevjournal.jpa.entity.Offer;
-import com.javadevjournal.jpa.enums.StatusName;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OfferService {
 
 	void save(Offer offer);
 
 	void delete(Offer offer);
+
+	List<OfferDTO> findAllOffers();
 
 	OfferDTO getOffer(Long id);
 

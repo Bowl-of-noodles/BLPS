@@ -19,6 +19,7 @@ public interface AdsRepository extends CrudRepository<Ad, Long> {
 
 	List<Ad> findAllByOwner(Long owner);
 
+
 	void deleteAllByOwner(Long customer);
 
 }

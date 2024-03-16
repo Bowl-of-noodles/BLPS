@@ -41,6 +41,16 @@ public class OfferServiceImpl implements OfferService {
 
 	@Override
 	@Transactional
+	public List<OfferDTO> findAllOffers() {
+		List<Offer> offers = (List<Offer>) offerRepository.findAll();
+		List<OfferDTO> offerDTOS = new ArrayList<>();
+		for (Offer offer : offers) {
+			offerDTOS.add(getOfferDTO(offer));
+		}
+		return offerDTOS;
+	}
+	@Override
+	@Transactional
 	public List<OfferDTO> findAllByCustomer(Customer customer) {
 		List<Offer> offers= offerRepository.findAllByCustomer(customer);
 		List<OfferDTO> offerDTOS = new ArrayList<>();
@@ -57,7 +67,7 @@ public class OfferServiceImpl implements OfferService {
 		if(statusDTO.getStatus().equals("")){
 			throw new EmptyEnterException("Вы не ввели значение статуса");
 		}
-		if(Arrays.stream(StatusName.values()).noneMatch(e -> e.name().equals(statusDTO.getStatus()))){
+		if(Arrays.stream(StatusName.values()).noneMatch(e -> e.name().equals(statusDTO.getStatus().toUpperCase()))){
 			throw new WrongInputException("Нет такого варианта статуса. Неправильный ввод");
 		}
 		List<Offer> offers= new ArrayList<>();

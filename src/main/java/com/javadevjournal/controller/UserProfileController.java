@@ -7,7 +7,6 @@ import com.javadevjournal.exceptions.NotFoundException;
 import com.javadevjournal.exceptions.WrongInputException;
 import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
-import com.javadevjournal.jpa.enums.RoleName;
 import com.javadevjournal.security.MyResourceNotFoundException;
 import com.javadevjournal.service.AdsService;
 import com.javadevjournal.service.CustomerService;
@@ -27,14 +26,14 @@ public class UserProfileController {
     private final AdsService adsService;
     private final OfferService offerService;
 
-    @GetMapping(value = "/users/user/{id}", produces = "application/json")
+    @GetMapping(value = "/users/{id}", produces = "application/json")
     public FullCustomerDTO getUserDetail(@PathVariable Long id) {
         Customer customer = customerService.findById(id);
         FullCustomerDTO customerInfo = customerService.customerInfo(customer);
         return customerInfo;
     }
 
-    @GetMapping(value = "/ads/ad/{id}", produces = "application/json")
+    @GetMapping(value = "/ads/{id}", produces = "application/json")
     public Ad getAdDetail(@PathVariable Long id) {
         return adsService.getById(id);
     }
@@ -47,9 +46,19 @@ public class UserProfileController {
         return jsonString;
     }
 
-    @GetMapping(value = "/users/user/all", produces = "application/json")
+    @GetMapping(value = "/users/all", produces = "application/json")
     public List<Customer> getAllUsers() {
         return customerService.findAll();
+    }
+
+    @GetMapping(value = "/ads/all", produces = "application/json")
+    public List<Ad> getAllAds() {
+        return adsService.findAllAds();
+    }
+
+    @GetMapping(value = "/offers/all", produces = "application/json")
+    public List<OfferDTO> getAllOffers() {
+        return offerService.findAllOffers();
     }
 
     @GetMapping(value = "/users/complaint/{id}")
@@ -92,7 +101,7 @@ public class UserProfileController {
         return adsService.createAd(adDTO, id);
     }
 
-    @GetMapping(value = "/ads/ad/{id}/rank", produces = "application/json")
+    @GetMapping(value = "/ads/{id}/rank", produces = "application/json")
     //public String rankAd(@PathVariable Long id,
     //                     @RequestParam("rank") final Double rank) {
     public MessageDTO rankAd(@PathVariable Long id, @RequestBody RankDTO rankDTO) {
@@ -100,19 +109,19 @@ public class UserProfileController {
         return messageDTO;
     }
 
-    @GetMapping(value = "/ads/ad/{id}/fav/add", produces = "application/json")
+    @GetMapping(value = "/ads/{id}/fav/add", produces = "application/json")
     public MessageDTO addFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
         MessageDTO message = customerService.addToFav(httpServletRequest, id);
         return message;
     }
 
-    @DeleteMapping (value = "/ads/ad/{id}/fav/del", produces = "application/json")
+    @DeleteMapping (value = "/ads/{id}/fav/del", produces = "application/json")
     public MessageDTO delFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
         MessageDTO message = customerService.delFromFav(httpServletRequest, id);
         return message;
     }
 
-    @GetMapping (value = "/ads/ad/fav/my", produces = "application/json")
+    @GetMapping (value = "/ads/fav/my", produces = "application/json")
     public List<Ad> showMyFav(HttpServletRequest httpServletRequest) {
         return customerService.showFav(httpServletRequest);
     }
@@ -145,7 +154,7 @@ public class UserProfileController {
         return offerService.findAllByCustomer(customer);
     }
 
-    @PutMapping (value = "/offers/admin/offer/{id}/status/change", produces = "application/json")
+    @PutMapping (value = "/offers/admin/{id}/status", produces = "application/json")
     public MessageDTO changeOfferStatus(HttpServletRequest httpServletRequest, @PathVariable Long id, @RequestBody StatusDTO statusDTO) throws NoAuthorityException {
         var customerOpt = customerService.whoIs(httpServletRequest);
         System.out.println(customerOpt);
@@ -157,7 +166,7 @@ public class UserProfileController {
         return offerService.changeOfferStatus(id, statusDTO);
     }
 
-    @GetMapping (value = "/offers/offer/{id}", produces = "application/json")
+    @GetMapping (value = "/offers/{id}", produces = "application/json")
     public OfferDTO getOffer(HttpServletRequest httpServletRequest, @PathVariable Long id) {
         var customerOpt = customerService.whoIs(httpServletRequest);
         System.out.println(customerOpt);
@@ -171,7 +180,7 @@ public class UserProfileController {
 
     @GetMapping (value = "/offers/admin/status", produces = "application/json")
     public List<OfferDTO> getOffersByStatus(HttpServletRequest httpServletRequest, @RequestBody StatusDTO statusDTO)throws NoAuthorityException {
-        var customerOpt = customerService.whoIsAdmin(httpServletRequest);
+        var customerOpt = customerService.whoIs(httpServletRequest);
         System.out.println(customerOpt);
 
         if (customerOpt.isEmpty()) {

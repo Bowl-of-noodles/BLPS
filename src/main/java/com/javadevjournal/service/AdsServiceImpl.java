@@ -2,17 +2,22 @@ package com.javadevjournal.service;
 
 import com.javadevjournal.dto.AdDTO;
 import com.javadevjournal.dto.MessageDTO;
+import com.javadevjournal.dto.OfferDTO;
 import com.javadevjournal.dto.RankDTO;
 import com.javadevjournal.exceptions.NotFoundException;
 import com.javadevjournal.jpa.entity.Ad;
+import com.javadevjournal.jpa.entity.Customer;
+import com.javadevjournal.jpa.entity.Offer;
 import com.javadevjournal.jpa.repository.AdsRepository;
 import com.javadevjournal.jpa.repository.CustomerRepository;
 import com.javadevjournal.security.MyResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +28,13 @@ public class AdsServiceImpl implements AdsService {
 
     @Autowired
     private AdsRepository adsRepository;
-    @Autowired
-    private CustomerRepository customerRepository;
 
+
+    @Override
+    @Transactional
+    public List<Ad> findAllAds() {
+        return (List<Ad>) adsRepository.findAll();
+    }
     @Override
     @Transactional
     public List<Ad> findAdsByFilter(Long minPrice, Long maxPrice, Double weight, String category) {
@@ -75,16 +84,12 @@ public class AdsServiceImpl implements AdsService {
     @Override
     @Transactional
     public MessageDTO rank(Long id, RankDTO rankDTO) {
-        Optional<Ad> adOpt;
-        try {
-            adOpt = adsRepository.findById(id);
-        } catch (Exception exception) {
-            throw new NotFoundException("Нет такого объявления");
-        }
+        Optional<Ad> adOpt= adsRepository.findById(id);
 
         if (adOpt.isEmpty()) {
             throw new NotFoundException("Нет такого объявления");
         }
+
         var ad = adOpt.get();
         var mark = rankDTO.getRank();
         return rank(ad, mark);

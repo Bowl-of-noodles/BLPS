@@ -90,9 +90,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .anyRequest().authenticated();
         http.headers().frameOptions().sameOrigin();
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                //.exceptionHandling()
+                //.authenticationEntryPoint(authEntryPoint);
     }
 
     private CorsConfigurationSource corsConfigurationSource() {

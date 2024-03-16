@@ -4,7 +4,6 @@ import com.javadevjournal.dto.FullCustomerDTO;
 import com.javadevjournal.dto.MessageDTO;
 import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
-import com.javadevjournal.jpa.entity.FavAdRow;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -20,7 +19,6 @@ public interface CustomerService {
 	Customer findById(Long id);
 
 	Optional<Customer> whoIs(HttpServletRequest httpServletRequest);
-	Optional<Customer> whoIsAdmin(HttpServletRequest httpServletRequest);
 
 	void deleteMe(HttpServletRequest httpServletRequest);
 

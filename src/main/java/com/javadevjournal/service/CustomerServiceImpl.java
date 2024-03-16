@@ -13,10 +13,18 @@ import com.javadevjournal.security.MyResourceNotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +47,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional
 	public List<Customer> findAll() {
+		//Page<Customer> pageCustomers = customerRepository.findAll(Sort.by("id"));
+		//List<Customer> customers = pageCustomers.getContent();
 		return (List<Customer>) customerRepository.findAll();
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public String findByToken(String token) {
 
 		String username = jwtUtil.usernameFromToken(token);
@@ -58,6 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.REPEATABLE_READ)
 	public FullCustomerDTO customerInfo(Customer customer){
 		FullCustomerDTO customerDTO = new FullCustomerDTO();
 		customerDTO.setId(customer.getId());
@@ -70,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	@Transactional
+	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	public Optional<Customer> whoIs(HttpServletRequest httpServletRequest){
 		String token = StringUtils.isNotEmpty(httpServletRequest.getHeader(AUTHORIZATION)) ?
 				httpServletRequest.getHeader(AUTHORIZATION) : "";
@@ -79,18 +91,6 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.findByUserName(username);
 	}
 
-	@Override
-	public Optional<Customer> whoIsAdmin(HttpServletRequest httpServletRequest){
-		String token = StringUtils.isNotEmpty(httpServletRequest.getHeader(AUTHORIZATION)) ?
-				httpServletRequest.getHeader(AUTHORIZATION) : "";
-		token = StringUtils.removeStart(token, "Bearer").trim();
-		String username = findByToken(token);
-		Optional<Customer> custOpt = customerRepository.findByUserName(username);
-		if(custOpt.get().getRole().getName() != RoleName.ADMIN){
-			throw new NoAuthorityException("У вас нет прав");
-		}
-		return custOpt;
-	}
 
 	@Override
 	@Transactional
