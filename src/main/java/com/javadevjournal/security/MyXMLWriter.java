@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 public class MyXMLWriter {
-    private DocumentBuilderFactory dbf;
+    /*private DocumentBuilderFactory dbf;
     private DocumentBuilder db ;
     private Document doc;
     private Element root;
@@ -68,7 +68,7 @@ public class MyXMLWriter {
         } catch (IOException e) {
             e.printStackTrace(System.out);
         }
-    }*/
+    }
     public void addToken(String username, String token){
         tokens.add(new TokenDTO(username, token));
     }
@@ -89,5 +89,5 @@ public class MyXMLWriter {
         } catch (Exception e) { // catches ANY exception
             e.printStackTrace();
         }
-    }
+    }*/
 }

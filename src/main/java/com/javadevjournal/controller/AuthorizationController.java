@@ -1,11 +1,9 @@
 package com.javadevjournal.controller;
 
 import com.javadevjournal.dto.CustomerDTO;
-import com.javadevjournal.dto.TokenDTO;
 import com.javadevjournal.exceptions.NoAuthorityException;
 import com.javadevjournal.jpa.entity.Customer;
 import com.javadevjournal.security.JwtUtil;
-import com.javadevjournal.security.MyXMLWriter;
 import com.javadevjournal.service.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,17 +25,14 @@ public class AuthorizationController {
     @Autowired
     private AuthorizationService authorizationService;
 
-    @Autowired
-    private MyXMLWriter myXMLWriter;
-
     @PostMapping("/login")
     public ResponseEntity<?> authUser(@RequestBody CustomerDTO loginRequestDTO) {
         Map<Object, Object> model = new HashMap<>();
         Customer authUser = authorizationService.authUser(loginRequestDTO);
         String token = jwtUtil.generateToken(authUser.getUserName());
         model.put("token", token);
-        myXMLWriter.addToken(authUser.getUserName(), token);
-        myXMLWriter.saveTokensToFile();
+        //myXMLWriter.addToken(authUser.getUserName(), token);
+        //myXMLWriter.saveTokensToFile();
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -49,8 +42,8 @@ public class AuthorizationController {
         Customer newUser = authorizationService.registerUser(registerRequestDTO);
         String token = jwtUtil.generateToken(newUser.getUserName());
         model.put("token", token);
-        myXMLWriter.addToken(newUser.getUserName(), token);
-        myXMLWriter.saveTokensToFile();
+        //myXMLWriter.addToken(newUser.getUserName(), token);
+        //myXMLWriter.saveTokensToFile();
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }

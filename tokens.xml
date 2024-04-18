@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <users>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXciLCJpYXQiOjE3MTA1ODc5ODUsImV4cCI6MTcxMDYyMzk4NX0.C0a40W6S5cpgy6KfB03OIZfDzqVs4oaIbqSFGnphSRg</token>
-        <username>new</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzEzNDQ4MzY0LCJleHAiOjE3MTM0ODQzNjR9.W31hRZgAdh0pq60GxLdyXt6APRz70CFMVZn3gywfMW0</token>
+        <username>user</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXciLCJpYXQiOjE3MTA1ODc5ODUsImV4cCI6MTcxMDYyMzk4NX0.C0a40W6S5cpgy6KfB03OIZfDzqVs4oaIbqSFGnphSRg</token>
-        <username>new</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU1MCwiZXhwIjoxNzEzNDg0NTUwfQ.8kxGtxaM4UK5Q5n7z7wIuoawTWkyFbA_biAc2cPSxMQ</token>
+        <username>admin</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NDQiLCJpYXQiOjE3MTA1ODgwNzUsImV4cCI6MTcxMDYyNDA3NX0.u4xOXVVg8YGoEZ41-sZHoitGXqELbPDHfImGfrrqhJ0</token>
-        <username>test44</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU2MSwiZXhwIjoxNzEzNDg0NTYxfQ.eQ1PI3VLro-eki1-GyHO1MYxPNd15wy8r-bktGwV2Us</token>
+        <username>admin</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuZXciLCJpYXQiOjE3MTA1ODk2MjQsImV4cCI6MTcxMDYyNTYyNH0.oL2CIaRXNainX0Ie1pYVY4LTwfu2dNQG4gWBnOGrPGM</token>
-        <username>new</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU5OCwiZXhwIjoxNzEzNDg0NTk4fQ.VWLc02dDaVUW_XX4q7kmy6z2-rArIipOf2R6HzzgN94</token>
+        <username>admin</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NDQiLCJpYXQiOjE3MTA1OTAxMzgsImV4cCI6MTcxMDYyNjEzOH0.YAFK8PwSTybPB7841hGwj-pJ5-xGufwLyfAFXDbc6SU</token>
-        <username>test44</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzEzNDQ4NjkwLCJleHAiOjE3MTM0ODQ2OTB9.br4WZf0JPMdoPHG7x-tkWJNfpsdN1e8lqRomPqV55X4</token>
+        <username>user</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0NDQiLCJpYXQiOjE3MTA1OTAxNDUsImV4cCI6MTcxMDYyNjE0NX0.DNaO4eg9Y3Q0PA_Vc7wk9yYtnHiA5LGNvPHhXV9E_LM</token>
-        <username>test44</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzEzNDQ4NzI2LCJleHAiOjE3MTM0ODQ3MjZ9.WeE0zb_S8XUi61N6ciIb3HMNt7W305e4XhYebUt2VC0</token>
+        <username>test</username>
     </user>
 </users>
