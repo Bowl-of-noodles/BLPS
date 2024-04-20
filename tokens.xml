@@ -1,27 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <users>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzEzNDQ4MzY0LCJleHAiOjE3MTM0ODQzNjR9.W31hRZgAdh0pq60GxLdyXt6APRz70CFMVZn3gywfMW0</token>
-        <username>user</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYWEiLCJpYXQiOjE3MTM0NTA2NDgsImV4cCI6MTcxMzQ4NjY0OH0.Jtb7b_ZloA4loHFQoXsgj1sKjpx4EwzTrsRxerAyhE4</token>
+        <username>aaa</username>
     </user>
     <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU1MCwiZXhwIjoxNzEzNDg0NTUwfQ.8kxGtxaM4UK5Q5n7z7wIuoawTWkyFbA_biAc2cPSxMQ</token>
-        <username>admin</username>
-    </user>
-    <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU2MSwiZXhwIjoxNzEzNDg0NTYxfQ.eQ1PI3VLro-eki1-GyHO1MYxPNd15wy8r-bktGwV2Us</token>
-        <username>admin</username>
-    </user>
-    <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcxMzQ0ODU5OCwiZXhwIjoxNzEzNDg0NTk4fQ.VWLc02dDaVUW_XX4q7kmy6z2-rArIipOf2R6HzzgN94</token>
-        <username>admin</username>
-    </user>
-    <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzEzNDQ4NjkwLCJleHAiOjE3MTM0ODQ2OTB9.br4WZf0JPMdoPHG7x-tkWJNfpsdN1e8lqRomPqV55X4</token>
-        <username>user</username>
-    </user>
-    <user>
-        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzEzNDQ4NzI2LCJleHAiOjE3MTM0ODQ3MjZ9.WeE0zb_S8XUi61N6ciIb3HMNt7W305e4XhYebUt2VC0</token>
-        <username>test</username>
+        <token>eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhYWEiLCJpYXQiOjE3MTM0NTA2NTUsImV4cCI6MTcxMzQ4NjY1NX0.y_je-2OpKiiCYlRM6BajkqplrlWXuXEux5OENJ53dX0</token>
+        <username>aaa</username>
     </user>
 </users>

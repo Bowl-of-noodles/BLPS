@@ -13,5 +13,6 @@ public class AdDTO {
 	private Double weight;
 	private String category;
 	private String phone;
+	private String description;
 
 }

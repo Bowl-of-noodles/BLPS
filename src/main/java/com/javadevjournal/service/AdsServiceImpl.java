@@ -2,32 +2,45 @@ package com.javadevjournal.service;
 
 import com.javadevjournal.dto.AdDTO;
 import com.javadevjournal.dto.MessageDTO;
-import com.javadevjournal.dto.OfferDTO;
 import com.javadevjournal.dto.RankDTO;
 import com.javadevjournal.exceptions.NotFoundException;
 import com.javadevjournal.jpa.entity.Ad;
-import com.javadevjournal.jpa.entity.Customer;
-import com.javadevjournal.jpa.entity.Offer;
+import com.javadevjournal.jpa.enums.AdStatus;
+import com.javadevjournal.jpa.enums.StatusName;
 import com.javadevjournal.jpa.repository.AdsRepository;
-import com.javadevjournal.jpa.repository.CustomerRepository;
+import com.javadevjournal.messaging.AdMessage;
+import com.javadevjournal.messaging.myConverter;
 import com.javadevjournal.security.MyResourceNotFoundException;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.TextMessage;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service("adsService")
 public class AdsServiceImpl implements AdsService {
 
+    private final AdsRepository adsRepository;
+    private final JmsTemplate jmsTemplate;
+    private final myConverter myConverter;
+    @Value("${second.queue.name}")
+    private String secondQueue;
+    @Value("${last.time.check.update}") //86400 seconds = 1 day = 24 hours
+    private Integer afterLastUpdate;
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdsServiceImpl.class);
 
-    @Autowired
-    private AdsRepository adsRepository;
 
 
     @Override
@@ -55,7 +68,6 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    @Transactional
     public Ad createAd(AdDTO adDTO, Long id) {
         Ad ad = new Ad();
         ad.setOwner(id);
@@ -63,15 +75,103 @@ public class AdsServiceImpl implements AdsService {
         ad.setWeight(adDTO.getWeight());
         ad.setPhone(adDTO.getPhone());
         ad.setCategory(adDTO.getCategory());
+        ad.setDescription(adDTO.getDescription());
+        ad.setStatus(AdStatus.INMODERATION);
+        ad.setLastTimeUpdateSend(LocalDateTime.now());
+        adsRepository.save(ad);
 
-        return adsRepository.save(ad);
+        AdMessage adCheck = new AdMessage();
+        adCheck.setAdId(ad.getId());
+        adCheck.setDescription(ad.getDescription());
+        String message = myConverter.convertAdMessage(adCheck);
+        jmsTemplate.convertAndSend(secondQueue, message);
+
+        return ad;
     }
+
+
+    @JmsListener(destination = "${core.queue.name}")
+    public void recieveMessage(Message message) throws JMSException {
+        TextMessage msg = (TextMessage) message;
+        LOGGER.info("following message is received: " + msg.getText());
+
+        JSONObject jo = new JSONObject(msg.getText());
+        String checkResult = jo.getString("check_result");
+        Long id = jo.getLong("ad_id");
+
+        Optional<Ad> adOpt = adsRepository.findById(id);
+        Ad ad = adOpt.get();
+        if(checkResult.equals("acceptable")){
+            ad.setStatus(AdStatus.APPROVED);
+        }
+        else{
+            ad.setStatus(AdStatus.BANNED);
+        }
+        adsRepository.save(ad);
+    }
+
+
+    @Override
+    public MessageDTO changeAd(AdDTO adDTO, Long id){
+        MessageDTO messageDTO = new MessageDTO();
+        Optional<Ad> adOpt = adsRepository.findById(id);
+        Ad ad = adOpt.get();
+
+        ad.setPrice(adDTO.getPrice());
+        ad.setWeight(adDTO.getWeight());
+        ad.setPhone(adDTO.getPhone());
+        ad.setCategory(adDTO.getCategory());
+        ad.setDescription(adDTO.getDescription());
+
+        adsRepository.save(ad);
+
+        messageDTO.setMessage("ОбЪявление успешно изменено");
+        return messageDTO;
+    }
+
+    @Override
+    public void sendAd(Long id){
+        Optional<Ad> adOpt = adsRepository.findById(id);
+        Ad ad = adOpt.get();
+
+        AdMessage adCheck = new AdMessage();
+        adCheck.setAdId(ad.getId());
+        adCheck.setDescription(ad.getDescription());
+        String message = myConverter.convertAdMessage(adCheck);
+        jmsTemplate.convertAndSend(secondQueue, message);
+
+    }
+
+    @Override
+    public void autoSendCheck(){
+        /*Optional<Ad> adOpt = adsRepository.findFirstByStatus(AdStatus.BANNED);
+        Ad ad = adOpt.get();
+        AdMessage adCheck = new AdMessage();
+        adCheck.setAdId(ad.getId());
+        adCheck.setDescription(ad.getDescription());
+        String message = myConverter.convertAdMessage(adCheck);
+        jmsTemplate.convertAndSend(secondQueue, message);*/
+        adsRepository.findAllByStatus(AdStatus.BANNED).parallelStream()
+                .filter(a -> a.getLastTimeUpdateSend().isBefore(LocalDateTime.now().minusSeconds(afterLastUpdate)))
+                .forEach(ad -> {
+                    AdMessage adCheck = new AdMessage();
+                    adCheck.setAdId(ad.getId());
+                    adCheck.setDescription(ad.getDescription());
+                    String message = myConverter.convertAdMessage(adCheck);
+                    jmsTemplate.convertAndSend(secondQueue, message);
+                    adsRepository.findById(ad.getId()).get().setLastTimeUpdateSend(LocalDateTime.now());
+                    adsRepository.save(ad);
+                });
+
+    }
+
+
 
     @Override
     @Transactional
     public Ad getById(Long id) {
         Optional<Ad> ad = adsRepository.findById(id);
-        return ad.orElseThrow(() -> new MyResourceNotFoundException("Пользователь не найден"));
+        return ad.orElseThrow(() -> new MyResourceNotFoundException("Оюъявление не найден"));
     }
 
     @Override

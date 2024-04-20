@@ -14,7 +14,9 @@ import com.javadevjournal.service.OfferService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.jms.JMSException;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -31,6 +33,14 @@ public class UserProfileController {
         Customer customer = customerService.findById(id);
         FullCustomerDTO customerInfo = customerService.customerInfo(customer);
         return customerInfo;
+    }
+
+    @PostMapping(value = "/messages/{id}", produces = "application/json")
+    public MessageDTO sendSth(@PathVariable Long id) throws JMSException, IOException {
+        adsService.sendAd(id);
+        MessageDTO messageDTO = new MessageDTO();
+        messageDTO.setMessage("Сообщение отправлено в очередь");
+        return messageDTO;
     }
 
     @GetMapping(value = "/ads/{id}", produces = "application/json")
@@ -99,6 +109,18 @@ public class UserProfileController {
             throw new MyResourceNotFoundException("Вы забанены, вам нельзя выставлять квартиры на продажу");
         }
         return adsService.createAd(adDTO, id);
+    }
+
+    @PutMapping (value = "/ads/{id}", produces = "application/json")
+    public MessageDTO changeAd(HttpServletRequest httpServletRequest, @PathVariable Long id, @RequestBody AdDTO adDTO) throws NoAuthorityException {
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        System.out.println(customerOpt);
+
+        if (customerOpt.isEmpty()) {
+            throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
+        }
+
+        return adsService.changeAd(adDTO, id);
     }
 
     @GetMapping(value = "/ads/{id}/rank", produces = "application/json")

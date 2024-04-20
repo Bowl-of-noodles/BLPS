@@ -24,5 +24,10 @@ public interface AdsService {
 	MessageDTO rank(Long id, RankDTO rankDTO);
 
 	Ad getById(Long id);
+	MessageDTO changeAd(AdDTO adDTO, Long id);
+
+	void sendAd(Long id);
+
+	void autoSendCheck();
 
 }

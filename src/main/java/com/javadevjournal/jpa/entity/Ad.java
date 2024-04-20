@@ -1,12 +1,12 @@
 package com.javadevjournal.jpa.entity;
 
+import com.javadevjournal.jpa.enums.AdStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -38,7 +38,19 @@ public class Ad {
 	@Column(name = "phone")
 	private String phone;
 
+	@Column(name = "description")
+	private String description;
+
 	@Column(name = "rank")
 	private Double rank;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "status")
+	private AdStatus status;
+
+	@Column(name = "date_update")
+	private LocalDateTime lastTimeUpdateSend;
+
+
 
 }
