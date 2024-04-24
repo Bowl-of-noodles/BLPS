@@ -13,6 +13,7 @@ import com.javadevjournal.jpa.enums.StatusName;
 import com.javadevjournal.jpa.repository.OfferRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;

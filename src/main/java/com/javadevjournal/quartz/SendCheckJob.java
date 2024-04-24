@@ -13,7 +13,7 @@ public class SendCheckJob extends QuartzJobBean {
 
     @Override
     public void executeInternal(JobExecutionContext context) {
-        adsService.autoSendCheck();
+        //adsService.autoSendCheck();
     }
 }
 

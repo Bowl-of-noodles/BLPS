@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +42,9 @@ public class Customer {
 
     @Column(name = "banned")
     private boolean banned = false;
+
+    @Column(name = "ban_time")
+    private LocalDateTime banTime;
 
     /*@ManyToMany (cascade = {
             CascadeType.PERSIST,

@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "label": "Offer id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0z3zodf",
+        "columns": null
+      },
+      "id": "Field_0rgwm50",
+      "key": "id"
+    },
+    {
+      "label": "Offer status",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1v0savv",
+        "columns": null
+      },
+      "id": "Field_12blpm8",
+      "key": "status"
+    }
+  ],
+  "type": "default",
+  "id": "Form_0bfw4ga",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

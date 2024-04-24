@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "label": "Ad id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_00ptw5h",
+        "columns": null
+      },
+      "id": "Field_1ppwp42",
+      "key": "ad_id"
+    }
+  ],
+  "type": "default",
+  "id": "Form_0oa7zcz",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

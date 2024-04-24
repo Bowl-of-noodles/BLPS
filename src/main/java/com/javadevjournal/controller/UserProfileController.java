@@ -73,7 +73,8 @@ public class UserProfileController {
 
     @GetMapping(value = "/users/complaint/{id}")
     public String complaint(HttpServletRequest httpServletRequest, @PathVariable Long id) {
-        return customerService.complaint(httpServletRequest, id);
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        return customerService.complaint(customerOpt.get(), id);
     }
 
     @GetMapping(value = "/ads/filter", produces = "application/json")
@@ -97,7 +98,7 @@ public class UserProfileController {
 
 
     @PostMapping(value = "/ads/create", produces = "application/json")
-    public Ad createAd(HttpServletRequest httpServletRequest, @RequestBody AdDTO adDTO) {
+    public String createAd(HttpServletRequest httpServletRequest, @RequestBody AdDTO adDTO) {
         var customerOpt = customerService.whoIs(httpServletRequest);
         System.out.println(customerOpt);
         Long id = customerOpt.get().getId();
@@ -133,13 +134,15 @@ public class UserProfileController {
 
     @GetMapping(value = "/ads/{id}/fav/add", produces = "application/json")
     public MessageDTO addFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
-        MessageDTO message = customerService.addToFav(httpServletRequest, id);
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        MessageDTO message = customerService.addToFav(customerOpt.get(), id);
         return message;
     }
 
     @DeleteMapping (value = "/ads/{id}/fav/del", produces = "application/json")
     public MessageDTO delFav(HttpServletRequest httpServletRequest, @PathVariable Long id) {
-        MessageDTO message = customerService.delFromFav(httpServletRequest, id);
+        var customerOpt = customerService.whoIs(httpServletRequest);
+        MessageDTO message = customerService.delFromFav(customerOpt.get(), id);
         return message;
     }
 

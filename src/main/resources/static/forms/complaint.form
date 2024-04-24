@@ -1,0 +1,23 @@
+{
+  "components": [
+    {
+      "label": "Customer id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0eeq48i",
+        "columns": null
+      },
+      "id": "Field_1fyawa8",
+      "key": "id"
+    }
+  ],
+  "type": "default",
+  "id": "Form_0ubf4j2",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

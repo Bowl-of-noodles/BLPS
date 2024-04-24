@@ -1,13 +1,16 @@
 package com.javadevjournal.service;
 
+import com.javadevjournal.delegates.UnbanUserDelegate;
 import com.javadevjournal.dto.FullCustomerDTO;
 import com.javadevjournal.dto.MessageDTO;
 import com.javadevjournal.exceptions.NoAuthorityException;
 import com.javadevjournal.jpa.entity.Ad;
 import com.javadevjournal.jpa.entity.Customer;
 import com.javadevjournal.jpa.entity.FavAdRow;
+import com.javadevjournal.jpa.enums.AdStatus;
 import com.javadevjournal.jpa.enums.RoleName;
 import com.javadevjournal.jpa.repository.CustomerRepository;
+import com.javadevjournal.messaging.AdMessage;
 import com.javadevjournal.security.JwtUtil;
 import com.javadevjournal.security.MyResourceNotFoundException;
 import lombok.AllArgsConstructor;
@@ -25,9 +28,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.print.Pageable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -39,6 +45,8 @@ public class CustomerServiceImpl implements CustomerService {
 	private final AdsService adsService;
 	@Autowired
 	private CustomerRepository customerRepository;
+
+	private static final Logger logger = Logger.getLogger(CustomerServiceImpl.class.getName());
 
 	@Autowired
 	private JwtUtil jwtUtil;
@@ -91,16 +99,22 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.findByUserName(username);
 	}
 
+	@Override
+	public Long getUserId(String username){
+		Optional<Customer> userOpt = customerRepository.findByUserName(username);
+		Customer user = userOpt.get();
+		return user.getId();
+	}
+
 
 	@Override
 	@Transactional
-	public MessageDTO addToFav(HttpServletRequest httpServletRequest, Long id) {
+	public MessageDTO addToFav(Customer customer, Long id) {
 		MessageDTO message = new MessageDTO();
-		var customerOpt = whoIs(httpServletRequest);
+
 
 		Ad ad = adsService.getById(id);
-		var customer = customerOpt.get();
-		if(!ad.getOwner().equals(customerOpt.get().getId())){
+		if(!ad.getOwner().equals(customer.getId())){
 			var favRow = new FavAdRow();
 			favRow.setCustomer(customer);
 			favRow.setAd(ad);
@@ -119,11 +133,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public MessageDTO delFromFav(HttpServletRequest httpServletRequest, Long id) {
-		var customerOpt = whoIs(httpServletRequest);
+	public MessageDTO delFromFav(Customer customer, Long id) {
 
 		Ad ad = adsService.getById(id);
-		var customer = customerOpt.get();
 		int index = -1;
 
 		for(int i = 0; i < customer.getFavAds().size(); i++){
@@ -175,14 +187,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional
-	public String complaint(HttpServletRequest httpServletRequest, Long customerId) {
-		var customerOpt = whoIs(httpServletRequest);
-		if (customerOpt.isEmpty()) {
-			throw new MyResourceNotFoundException("Хз как так вышло, вы не авторизованы");
-		}
-		var customer = customerOpt.get();
+	public String complaint(Customer customer, Long customerId) {
 		if (customer.isBanned()) {
-			throw new MyResourceNotFoundException("Пользователя на которого вы жалуетесь уже забанен");
+			throw new MyResourceNotFoundException("Вы забанены");
 		}
 		Customer anotherUser = findById(customerId);
 		if (anotherUser == null) {
@@ -194,6 +201,20 @@ public class CustomerServiceImpl implements CustomerService {
 		return complaint(anotherUser);
 	}
 
+
+	@Transactional
+	@Override
+	public void unban(){
+		customerRepository.findAllByBanned(true).parallelStream()
+				.filter(c -> c.getBanTime().isBefore(LocalDateTime.now().minusSeconds(300)))
+				.forEach(customer -> {
+					customer.setBanned(false);
+					customer.setKarmaNegative(0);
+					customerRepository.save(customer);
+					logger.log(Level.INFO, "User with id "+ customer.getId() + " was unbanned");
+				});
+	}
+
 	@Override
 	public void save(Customer customer) {
 		customerRepository.save(customer);
@@ -203,6 +224,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.incNegative();
 		if (customer.getKarmaNegative() >= 5) {
 			customer.setBanned(true);
+			customer.setBanTime(LocalDateTime.now());
 			customerRepository.save(customer);
 			adsService.deleteAllByOwner(customer.getId());
 			String status = "Пользователь успешно забанен!";

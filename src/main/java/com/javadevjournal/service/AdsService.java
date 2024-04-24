@@ -17,7 +17,7 @@ public interface AdsService {
 
 	void deleteAllByOwner(Long id);
 
-	Ad createAd(AdDTO adDTO, Long id);
+	String createAd(AdDTO adDTO, Long id);
 
 	void save(Ad ad);
 

@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "label": "Ad id",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_183u7q1",
+        "columns": null
+      },
+      "id": "Field_0uxzbw8",
+      "key": "ad_id"
+    },
+    {
+      "label": "Rank",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0d1nd67",
+        "columns": null
+      },
+      "id": "Field_062iex5",
+      "key": "rank"
+    }
+  ],
+  "type": "default",
+  "id": "Form_09uqnyy",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

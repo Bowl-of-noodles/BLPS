@@ -1,0 +1,33 @@
+{
+  "components": [
+    {
+      "label": "Username",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0wfvx9z",
+        "columns": null
+      },
+      "id": "Field_0t65s1h",
+      "key": "username"
+    },
+    {
+      "label": "Password",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0iazs6m",
+        "columns": null
+      },
+      "id": "Field_07b3z01",
+      "key": "password"
+    }
+  ],
+  "type": "default",
+  "id": "Form_17872pf",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

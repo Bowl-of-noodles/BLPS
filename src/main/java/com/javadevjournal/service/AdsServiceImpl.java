@@ -68,7 +68,7 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Ad createAd(AdDTO adDTO, Long id) {
+    public String createAd(AdDTO adDTO, Long id) {
         Ad ad = new Ad();
         ad.setOwner(id);
         ad.setPrice(adDTO.getPrice());
@@ -84,30 +84,9 @@ public class AdsServiceImpl implements AdsService {
         adCheck.setAdId(ad.getId());
         adCheck.setDescription(ad.getDescription());
         String message = myConverter.convertAdMessage(adCheck);
-        jmsTemplate.convertAndSend(secondQueue, message);
-
-        return ad;
-    }
 
 
-    @JmsListener(destination = "${core.queue.name}")
-    public void recieveMessage(Message message) throws JMSException {
-        TextMessage msg = (TextMessage) message;
-        LOGGER.info("following message is received: " + msg.getText());
-
-        JSONObject jo = new JSONObject(msg.getText());
-        String checkResult = jo.getString("check_result");
-        Long id = jo.getLong("ad_id");
-
-        Optional<Ad> adOpt = adsRepository.findById(id);
-        Ad ad = adOpt.get();
-        if(checkResult.equals("acceptable")){
-            ad.setStatus(AdStatus.APPROVED);
-        }
-        else{
-            ad.setStatus(AdStatus.BANNED);
-        }
-        adsRepository.save(ad);
+        return message;
     }
 
 

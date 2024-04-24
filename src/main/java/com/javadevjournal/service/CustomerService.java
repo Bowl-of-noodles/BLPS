@@ -18,16 +18,19 @@ public interface CustomerService {
 
 	Customer findById(Long id);
 
+	void unban();
+
 	Optional<Customer> whoIs(HttpServletRequest httpServletRequest);
+	Long getUserId(String username);
 
 	void deleteMe(HttpServletRequest httpServletRequest);
 
-	MessageDTO addToFav(HttpServletRequest httpServletRequest, Long id);
-	MessageDTO delFromFav(HttpServletRequest httpServletRequest, Long id);
+	MessageDTO addToFav(Customer customer, Long id);
+	MessageDTO delFromFav(Customer customer, Long id);
 
 	List<Ad> showFav(HttpServletRequest httpServletRequest);
 
-	String complaint(HttpServletRequest httpServletRequest, Long customerId);
+	String complaint(Customer customer, Long customerId);
 
 	FullCustomerDTO customerInfo(Customer customer);
 

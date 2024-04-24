@@ -28,6 +28,8 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
     List<Customer> findCustomerById(Long id);
 
+    List<Customer> findAllByBanned(Boolean isBanned);
+
     List<Customer> findAllByRoleName(RoleName role);
 
     default Role findRoleByName(String userName) {
@@ -35,4 +37,6 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
         Customer customer = cust.get();
         return customer.getRole();
     }
+
+
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1lqqerj" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.22.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:process id="regist" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Переход на страницу регистрации">
+      <bpmn:outgoing>Flow_0mj7x4e</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_1radzuk" name="Переход к сервису">
+      <bpmn:incoming>Flow_1r03919</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Activity_0zyh149" name="Заполнить форму регистрации" camunda:formKey="camunda-forms:/forms/regist.form">
+      <bpmn:incoming>Flow_0mj7x4e</bpmn:incoming>
+      <bpmn:outgoing>Flow_1iq1xcq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_0z7jkdc" name="Авторизация" camunda:delegateExpression="#{registerDelegate}">
+      <bpmn:incoming>Flow_1iq1xcq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nfra7k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_1d4y2e2" name="Получение токена">
+      <bpmn:incoming>Flow_0nfra7k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r03919</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0mj7x4e" sourceRef="StartEvent_1" targetRef="Activity_0zyh149" />
+    <bpmn:sequenceFlow id="Flow_1r03919" sourceRef="Activity_1d4y2e2" targetRef="Event_1radzuk" />
+    <bpmn:sequenceFlow id="Flow_1iq1xcq" sourceRef="Activity_0zyh149" targetRef="Activity_0z7jkdc" />
+    <bpmn:sequenceFlow id="Flow_0nfra7k" sourceRef="Activity_0z7jkdc" targetRef="Activity_1d4y2e2" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="regist">
+      <bpmndi:BPMNShape id="BPMNShape_0r4fmws" bpmnElement="StartEvent_1">
+        <dc:Bounds x="172" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="145" width="64" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1radzuk_di" bpmnElement="Event_1radzuk">
+        <dc:Bounds x="782" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="774" y="145" width="53" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0wwv537_di" bpmnElement="Activity_0zyh149">
+        <dc:Bounds x="260" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lwsbj6_di" bpmnElement="Activity_0z7jkdc">
+        <dc:Bounds x="440" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uzkm7a_di" bpmnElement="Activity_1d4y2e2">
+        <dc:Bounds x="610" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0mj7x4e_di" bpmnElement="Flow_0mj7x4e">
+        <di:waypoint x="208" y="120" />
+        <di:waypoint x="260" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r03919_di" bpmnElement="Flow_1r03919">
+        <di:waypoint x="710" y="120" />
+        <di:waypoint x="782" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1iq1xcq_di" bpmnElement="Flow_1iq1xcq">
+        <di:waypoint x="360" y="120" />
+        <di:waypoint x="440" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nfra7k_di" bpmnElement="Flow_0nfra7k">
+        <di:waypoint x="540" y="120" />
+        <di:waypoint x="610" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,63 @@
+{
+  "components": [
+    {
+      "label": "Price",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_03idte0",
+        "columns": null
+      },
+      "id": "Field_1gdct3u",
+      "key": "price"
+    },
+    {
+      "label": "Weight",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_176ipx2",
+        "columns": null
+      },
+      "id": "Field_01xeoce",
+      "key": "weight"
+    },
+    {
+      "label": "Category",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_0oas1tg",
+        "columns": null
+      },
+      "id": "Field_0pfseye",
+      "key": "category"
+    },
+    {
+      "label": "Phone",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1p0uljz",
+        "columns": null
+      },
+      "id": "Field_13h085m",
+      "key": "phone"
+    },
+    {
+      "label": "Description",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1bml31i",
+        "columns": null
+      },
+      "id": "Field_0f992vw",
+      "key": "description"
+    }
+  ],
+  "type": "default",
+  "id": "Form_1qo9051",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.22.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.21.0",
+  "schemaVersion": 16
+}

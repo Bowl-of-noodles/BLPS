@@ -25,14 +25,14 @@ public class ShowTimeJobConfig {
                 .build();
     }
 
-    @Bean
+    /*@Bean
     public Trigger showTimeTrigger() {
         return TriggerBuilder.newTrigger()
                 .forJob(showTimeJobDetail())
                 .withIdentity("SendCheckJob", "PERMANENT")
                 .withSchedule(CronScheduleBuilder.cronSchedule(CRON_INIT_NOTIFICATION_CREATEORDER))
                 .build();
-    }
+    }*/
 }
 
 
